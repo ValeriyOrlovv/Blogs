@@ -15,7 +15,7 @@ from django.views.generic.edit import FormMixin
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.forms import CommentForm, PostForm, UserProfileForm
-from blog.models import Post, Category, User, Comment
+from blog.models import Category, Comment, Post, User
 
 
 class PostListView(ListView):
@@ -222,7 +222,10 @@ class PostUpdateView(UpdateView):
     form_class = PostForm
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated and form.instance.author == self.request.user:
+        if (
+            self.request.user.is_authenticated
+            and form.instance.author == self.request.user
+        ):
             return super().form_valid(form)
         else:
             return redirect(reverse(
@@ -245,7 +248,10 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.author == self.request.user or self.request.user.is_staff:
+        if (
+            self.object.author == self.request.user
+            or self.request.user.is_staff
+        ):
             return super().delete(request, *args, **kwargs)
         else:
             raise Http404

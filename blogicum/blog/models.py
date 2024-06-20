@@ -7,7 +7,7 @@ from blog.constants import OBJECT_TEXT_LIMIT
 User = get_user_model()
 
 
-class PublishedCreatedBaseModel(models.Model):  
+class PublishedCreatedBaseModel(models.Model):
     is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано',
