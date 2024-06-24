@@ -60,9 +60,10 @@ class Post(PublishedCreatedBaseModel):
                    'делать отложенные публикации.')
     )
     image = models.ImageField(
-        'Изобрадение',
+        'Изображение',
         upload_to='post_images',
-        blank=True)
+        blank=True
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -70,8 +71,7 @@ class Post(PublishedCreatedBaseModel):
     )
     location = models.ForeignKey(
         Location,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         verbose_name='Местоположение'
     )
     category = models.ForeignKey(
@@ -82,9 +82,9 @@ class Post(PublishedCreatedBaseModel):
     )
 
     class Meta:
-        verbose_name = 'публикация'
+        verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'
-        ordering = (['-pub_date'])
+        ordering = ['-pub_date']
         default_related_name = 'posts'
 
     def __str__(self):
@@ -103,6 +103,18 @@ class Comment(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор комментария',
+        related_name='comments'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     text = models.TextField(verbose_name='Текст комментария')
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return (
+            f'Комментарий от {self.author} к публикации "{self.post.title}" '
+            f': {self.text[:OBJECT_TEXT_LIMIT]}'
+        )

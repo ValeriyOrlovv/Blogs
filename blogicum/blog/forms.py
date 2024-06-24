@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 
-
 from blog.models import Comment, Post, User
 
 
@@ -13,7 +12,7 @@ class CommentForm(ModelForm):
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        exclude = ('created_at', 'author',)
+        exclude = ('author',)
 
 
 class UserProfileForm(ModelForm):
