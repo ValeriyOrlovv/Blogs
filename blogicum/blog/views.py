@@ -1,10 +1,6 @@
-from typing import Any
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
 from django.db.models import Count
-from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -79,7 +75,9 @@ class PostDetail(DetailView, FormMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         posts = self.get_object()
-        comments = posts.comments.select_related('author').order_by('created_at')
+        comments = (
+            posts.comments.select_related('author').order_by('created_at')
+        )
         context['comments'] = comments
         return context
 
@@ -215,14 +213,14 @@ class PostUpdateView(UpdateView):
 
     def form_valid(self, form):
         if (
-            self.request.user.is_authenticated 
-            and form.instance.author == self.request.user 
+            self.request.user.is_authenticated
+            and form.instance.author == self.request.user
         ):
-            return super().form_valid(form) 
+            return super().form_valid(form)
         else:
-            return redirect(reverse( 
-                'blog:post_detail', 
-                kwargs={'post_id': self.kwargs.get('post_id')} 
+            return redirect(reverse(
+                'blog:post_detail',
+                kwargs={'post_id': self.kwargs.get('post_id')}
             ))
 
     def get_success_url(self):
