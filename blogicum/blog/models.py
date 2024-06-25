@@ -84,7 +84,7 @@ class Post(PublishedCreatedBaseModel):
     class Meta:
         verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
         default_related_name = 'posts'
 
     def __str__(self):
@@ -111,10 +111,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ['-created_at']
+        ordering = ('-created_at',)
 
     def __str__(self):
-        return (
-            f'Комментарий от {self.author} к публикации "{self.post.title}" '
-            f': {self.text[:OBJECT_TEXT_LIMIT]}'
-        )
+        return self.post
